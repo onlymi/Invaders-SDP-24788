@@ -34,8 +34,14 @@ This menu will ensure players can smoothly access all core features such as:
 ---
 
 ## Dependencies on Other Teams
-- Sound Effects/BGM
+- Sound Effects/BGM 
+  - How to add the sound function in the setting menu.
+  
+    For example, click to control volume or slide volume 
 - Records & Achievements System
-- Currency System
+  - How to show record & achievement on the screen
+- Item System
+  - Create a shop button on the TitleScreen if the item team wants to
 - Two-player Mode
+  - mode selection via play button in TitleScreen
 
