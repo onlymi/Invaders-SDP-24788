@@ -75,6 +75,10 @@ public final class DrawManager {
         EnemyShipC2,
         /** Bonus ship. */
         EnemyShipSpecial,
+        /** Boss ship. */
+        BossEnemy1,
+        BossEnemy2,
+        BossEnemy3,
         /** Destroyed enemy ship. */
         Explosion,
         /** Item Graphics Temp */
@@ -105,6 +109,9 @@ public final class DrawManager {
             spriteMap.put(SpriteType.EnemyShipC1, new boolean[12][8]);
             spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
             spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
+            spriteMap.put(SpriteType.BossEnemy1, new boolean[21][10]);
+            spriteMap.put(SpriteType.BossEnemy2, new boolean[21][10]);
+            spriteMap.put(SpriteType.BossEnemy3, new boolean[21][10]);
             spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
 
             // Item sprite placeholder
