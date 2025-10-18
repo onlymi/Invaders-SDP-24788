@@ -2,7 +2,6 @@ package screen;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.*;
 
 import engine.*;
@@ -133,7 +132,7 @@ public class ScoreScreen extends Screen {
 				}
 			}
 
-			if (this.isNewRecord && this.selectionCooldown.checkFinished()) {
+			if (this.selectionCooldown.checkFinished()) {
 				if (inputManager.isKeyDown(KeyEvent.VK_RIGHT)) {
 					this.nameCharSelected = this.nameCharSelected == 2 ? 0
 							: this.nameCharSelected + 1;
@@ -163,14 +162,32 @@ public class ScoreScreen extends Screen {
 
 	/**
 	 * Saves the score as a high score.
+     * 2025-10-18
+     * Add ability that distinguish duplicate names and save higher scores
 	 */
-	private void saveScore() {
-		String mode = (gameState != null && gameState.isCoop()) ? "2P" : "1P";
-		highScores.add(new Score(new String(this.name), this.gameState, mode)); // update mode
-		Collections.sort(highScores);
-		if (highScores.size() > MAX_HIGH_SCORE_NUM)
-			highScores.remove(highScores.size() - 1);
-
+    private void saveScore() {
+        String mode = (gameState != null && gameState.isCoop()) ? "2P" : "1P";
+        String newName = new String(this.name);
+        Score newScore = new Score(newName, this.gameState, mode);
+        boolean foundAndReplaced = false;
+        for (int i = 0; i < highScores.size(); i++) {
+            Score existingScore = highScores.get(i);
+            if (existingScore.getName().equals(newName)) {
+                if (newScore.getScore() > existingScore.getScore()) {
+                    highScores.set(i, newScore);
+                    foundAndReplaced = true;
+                } else {
+                    foundAndReplaced = true;
+                }
+                break;
+            }
+        }
+        if (!foundAndReplaced) {
+            highScores.add(newScore);
+        }
+        Collections.sort(highScores);
+        if (highScores.size() > MAX_HIGH_SCORE_NUM)
+            highScores.remove(highScores.size() - 1);
         try {
 			Core.getFileManager().saveHighScores(highScores, mode);
 		} catch (IOException e) {
@@ -197,7 +214,7 @@ public class ScoreScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
-		drawManager.drawGameOver(this, this.inputDelay.checkFinished(), this.isNewRecord);
+		drawManager.drawGameOver(this, this.inputDelay.checkFinished());
 
 		float accuracy = (this.bulletsShot > 0)
 				? (float) this.shipsDestroyed / this.bulletsShot
@@ -211,8 +228,7 @@ public class ScoreScreen extends Screen {
 					this.gameState.getLivesRemaining(),
 					this.gameState.getShipsDestroyed(),
 					0f, // leaving out team accuracy
-					this.isNewRecord,
-					false // Draw accuracy for 2P mode
+                    false // Draw accuracy for 2P mode
 			);
 
 			// show per-player lines when in 2P mode
@@ -220,6 +236,9 @@ public class ScoreScreen extends Screen {
 			float p1Acc = this.gameState.getBulletsShot(0) > 0 ? (float) this.gameState.getShipsDestroyed(0) / this.gameState.getBulletsShot(0) : 0f;
 			float p2Acc = this.gameState.getBulletsShot(1) > 0 ? (float) this.gameState.getShipsDestroyed(1) / this.gameState.getBulletsShot(1) : 0f;
 
+			if(p1Acc >= 80 && p2Acc >=80){
+				achievementManager.unlock("Sharpshooter");
+			}
 			String p1 = String.format("P1  %04d  |  acc %.2f%%", this.gameState.getScore(0), p1Acc * 100f);
 			String p2 = String.format("P2  %04d  |  acc %.2f%%", this.gameState.getScore(1), p2Acc * 100f);
 
@@ -235,12 +254,13 @@ public class ScoreScreen extends Screen {
 		} else {
 			// 1P legacy summary with accuracy
 			float acc = (this.bulletsShot > 0) ? (float) this.shipsDestroyed / this.bulletsShot : 0f;
-
-			drawManager.drawResults(this, this.score, this.livesRemaining, this.shipsDestroyed, acc, this.isNewRecord, true); // Draw accuracy for 1P mode
+			if(acc >= 80){
+				achievementManager.unlock("Sharpshooter");
+			}
+			drawManager.drawResults(this, this.score, this.livesRemaining, this.shipsDestroyed, acc, true); // Draw accuracy for 1P mode
 		}
 
-		if (this.isNewRecord)
-			drawManager.drawNameInput(this, this.name, this.nameCharSelected);
+        drawManager.drawNameInput(this, this.name, this.nameCharSelected, isNewRecord);
 
 		drawManager.completeDrawing(this);
 	}
