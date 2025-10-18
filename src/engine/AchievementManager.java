@@ -4,6 +4,7 @@ import screen.GameScreen;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import engine.SoundManager;
 
 /**
  * Manages the list of achievements for a player,
@@ -50,12 +51,12 @@ public class AchievementManager {
      * Converts the achievements into a boolean list and
      * saves them using FileManager.
      */
-    public void saveToFile(String userName) throws IOException {
+    public void saveToFile(String userName, String mode) throws IOException {
         List<Boolean> flags = new ArrayList<>();
         for (Achievement a : achievements) {
             flags.add(a.isUnlocked());
         }
-        FileManager.getInstance().unlockAchievement(userName, flags);
+        FileManager.getInstance().unlockAchievement(userName, flags, mode); // mode 추가
     }
 
     /** Returns the current achievement list. */
@@ -68,7 +69,7 @@ public class AchievementManager {
         for (Achievement a : achievements) {
             if (a.getName().equals(name) && !a.isUnlocked()) {
                 a.unlock();
-                System.out.println("Achievement unlocked: " + a);
+                SoundManager.playOnce("sound/achievement.wav");
                 logger.info("Achievement unlocked: " + a);
             }
         }
