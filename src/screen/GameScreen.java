@@ -257,7 +257,6 @@ public class GameScreen extends Screen {
             }
         }
 
-        checkAchievement();
         if (this.inputDelay.checkFinished() && inputManager.isKeyDown(KeyEvent.VK_ESCAPE) && this.pauseCooldown.checkFinished()) {
             this.isPaused = !this.isPaused;
             this.pauseCooldown.reset();
@@ -366,11 +365,11 @@ public class GameScreen extends Screen {
             drawManager.setLastLife(state.getLivesRemaining() == 1);
 		    draw();
 
-        if (!sessionHighScoreNotified && this.state.getScore() > this.topScore) {
-            sessionHighScoreNotified = true;
-            this.highScoreNotified = true;
-            this.highScoreNoticeStartTime = System.currentTimeMillis();
-        }
+            if (!sessionHighScoreNotified && this.state.getScore() > this.topScore) {
+                sessionHighScoreNotified = true;
+                this.highScoreNotified = true;
+                this.highScoreNoticeStartTime = System.currentTimeMillis();
+            }
 
             // End condition: formation cleared or TEAM lives exhausted.
             if ((this.enemyShipFormation.isEmpty() || !state.teamAlive()) && !this.levelFinished) {
@@ -380,31 +379,21 @@ public class GameScreen extends Screen {
                 ItemPool.recycle(items);
                 this.items.removeAll(this.items);
 
-			this.levelFinished = true;
-			this.screenFinishedCooldown.reset();
+                this.levelFinished = true;
+                this.screenFinishedCooldown.reset();
 
-			if(enemyShipFormation.getShipCount() == 0 && state.getBulletsShot() > 0 && state.getBulletsShot() == state.getShipsDestroyed()){
-				achievementManager.unlock("Perfect Shooter");
-			}
-			if(enemyShipFormation.getShipCount() == 0 && !this.tookDamageThisLevel){
-				achievementManager.unlock("Survivor");
-			}
-			if(enemyShipFormation.getShipCount() == 0 & state.getLevel() == 5){
-				achievementManager.unlock("Clear");
-			}
-                checkAchievement();
-		}
+		    }
 
-		if (this.levelFinished && this.screenFinishedCooldown.checkFinished()) {
-			if (!achievementManager.hasPendingToasts()) {
-				this.isRunning = false;
-			}
-		}
+            if (this.levelFinished && this.screenFinishedCooldown.checkFinished()) {
+                if (!achievementManager.hasPendingToasts()) {
+                    this.isRunning = false;
+                }
+            }
 
-		if (this.achievementManager != null) this.achievementManager.update();
-	}
+		    if (this.achievementManager != null) this.achievementManager.update();
+	    }
 
-
+        checkAchievement();
         draw();
     }
 
@@ -600,8 +589,6 @@ public class GameScreen extends Screen {
                             this.enemyShipFormation.destroy(enemyShip);
                             SoundManager.playOnce("sound/invaderkilled.wav");
                             this.logger.info("Hit on enemy ship.");
-
-                            checkAchievement();
                         }
                         break;
                     }
