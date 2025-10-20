@@ -118,7 +118,6 @@ public class AchievementScreen extends Screen {
 
         List<String> page1P = (start < completer1P.size()) ?
                 completer1P.subList(start, end1) : Collections.emptyList();
-
         List<String> page2P = (start < completer2P.size()) ?
                 completer2P.subList(start, end2) : Collections.emptyList();
 
