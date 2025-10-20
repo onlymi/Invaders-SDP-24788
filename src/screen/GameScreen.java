@@ -665,7 +665,7 @@ public class GameScreen extends Screen {
                 achievementManager.unlock("Survivor");
             }
             //Sharpshooter
-            if(p1Acc>=30){
+            if(p1Acc>=80){
                 //1p
                 achievementManager.unlock("Sharpshooter");
                 //coop
