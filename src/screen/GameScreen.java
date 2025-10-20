@@ -676,7 +676,7 @@ public class GameScreen extends Screen {
         }
 
         //50 Bullets
-        if(state.getBulletsShot() >= 100){
+        if(state.getBulletsShot() >= 50){
             achievementManager.unlock("50 Bullets");
         }
         //Get 3000 Score
