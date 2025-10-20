@@ -119,7 +119,7 @@ public class SettingScreen extends Screen {
          * Change key settings
          */
          else if (this.selectMenuItem == firstplayerMenu || this.selectMenuItem == secondplayerMenu) {
-             if (inputManager.isKeyDown(KeyEvent.VK_RIGHT) && this.inputCooldown.checkFinished() && waitingForNewKey == false) {
+             if (inputManager.isKeyDown(KeyEvent.VK_RIGHT) && this.inputCooldown.checkFinished() && waitingForNewKey == false && selectedSection == 0) {
                  this.selectedSection= 1;
                  this.selectedKeyIndex = 0;
                  this.inputCooldown.reset();
@@ -128,7 +128,7 @@ public class SettingScreen extends Screen {
                  selectedSection = 0;
                  this.inputCooldown.reset();
              }
-             if (this.selectedSection == 1 & inputManager.isKeyDown(KeyEvent.VK_UP) && this.inputCooldown.checkFinished() && selectedKeyIndex > 0 && waitingForNewKey == false) {
+             if (this.selectedSection == 1 && inputManager.isKeyDown(KeyEvent.VK_UP) && this.inputCooldown.checkFinished() && selectedKeyIndex > 0 && waitingForNewKey == false) {
                  selectedKeyIndex--;
                  this.inputCooldown.reset();
              }
