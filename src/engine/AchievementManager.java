@@ -33,6 +33,7 @@ public class AchievementManager {
         list.add(new Achievement("Sharpshooter", "Record an accuracy of more than 80 percent"));
         list.add(new Achievement("50 Bullets", "Fire 50 Bullets."));
         list.add(new Achievement("Get 3000 Score", "Get more than 3,000 points"));
+        list.add(new Achievement("Perfect Shooter", "Destroy all enemies with perfect accuracy."));
         return list;
     }
 
