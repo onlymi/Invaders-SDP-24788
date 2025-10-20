@@ -902,12 +902,18 @@ public final class DrawManager {
      *
      * @param screen
      *                   Screen to draw on.
-     * @param completer
-     *                   List of completer
+     * @param completer1p
+     *                   List of completer 1P mode
+     * @param completer2p
+     *                   List of completer 2P mode
+     * @param numOfPages
+     *                   number of pages
+     *
      * [2025-10-09] Added in commit: feat: complete drawAchievementMenu method in DrawManager
      */
     public void drawAchievementMenu(final Screen screen,
-                                    Achievement achievement, List<String> completer) {
+                                    Achievement achievement, List<String> completer1p,
+                                    List<String> completer2p, String numOfPages) {
         String achievementsTitle = "Achievements";
         String instructionsString = "Press ESC to return";
         String playerModeString = "              1P                                      2P              ";
@@ -934,25 +940,13 @@ public final class DrawManager {
         int leftX = screen.getWidth() / 4;      // 1P column
         int rightX = screen.getWidth() * 2 / 3; // 2P column
 
-        List<String> team1 = new ArrayList<>();
-        List<String> team2 = new ArrayList<>();
+        // Separate completer into 1P and 2P teams based on the mode prefix
+        // [2025-10-20] fix: Fix achievement screen not showing later pages
+        if ((completer1p != null && !completer1p.isEmpty()) || (completer2p != null && !completer2p.isEmpty())) {
 
-        // Separate completers into 1P and 2P teams based on the mode prefix
-        if (completer != null && !completer.isEmpty()) {
-            for (String entry : completer) {
-                String[] parts = entry.split(":");
-                if (parts.length == 2) {
-                    String modeString = parts[0].trim();                      // e.g., "2P"
-                    String numericPart = modeString.replaceAll("[^0-9]", ""); // Extract numeric part: "2"
-                    int mode = Integer.parseInt(numericPart);
-                    String name = parts[1].trim();
-                    if (mode == 1) {
-                        team1.add(name);
-                    } else if (mode == 2) {
-                        team2.add(name);
-                    }
-                }
-            }
+            List<String> team1 = completer1p.stream().map(s -> s.substring(2)).toList();
+
+            List<String> team2 = completer2p.stream().map(s -> s.substring(2)).toList();
 
             // Draw names in each column, up to the max number of lines
             int maxLines = Math.max(team1.size(), team2.size());
@@ -967,13 +961,13 @@ public final class DrawManager {
                     backBufferGraphics.drawString(team2.get(i), rightX, y);
                 }
             }
-
         } else {
             // Display placeholder text if no achievers were found
             backBufferGraphics.setColor(Color.GREEN);
             drawCenteredBigString(screen, "No achievers found.", (int) (screen.getHeight() * 0.5));
         }
-
+        backBufferGraphics.setColor(Color.GREEN);
+        drawCenteredBigString(screen, numOfPages, (int) (screen.getHeight() * 0.8));
         // Draw prev/next navigation buttons at the bottom
         backBufferGraphics.setColor(Color.GREEN);
         drawCenteredRegularString(screen, prevNextString, (int) (screen.getHeight() * 0.8));
