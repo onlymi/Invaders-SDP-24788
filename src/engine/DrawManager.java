@@ -902,8 +902,13 @@ public final class DrawManager {
      *
      * @param screen
      *                   Screen to draw on.
-     * @param completer
-     *                   List of completer
+     * @param completer1p
+     *                   List of completer 1P mode
+     * @param completer2p
+     *                   List of completer 2P mode
+     * @param numOfPages
+     *                   number of pages
+     *
      * [2025-10-09] Added in commit: feat: complete drawAchievementMenu method in DrawManager
      */
     public void drawAchievementMenu(final Screen screen,
@@ -936,7 +941,8 @@ public final class DrawManager {
         int rightX = screen.getWidth() * 2 / 3; // 2P column
 
         // Separate completer into 1P and 2P teams based on the mode prefix
-        if (completer1p != null && !completer1p.isEmpty() && completer2p != null && !completer2p.isEmpty()) {
+        // [2025-10-20] fix: Fix achievement screen not showing later pages
+        if ((completer1p != null && !completer1p.isEmpty()) || (completer2p != null && !completer2p.isEmpty())) {
 
             List<String> team1 = completer1p.stream().map(s -> s.substring(2)).toList();
 
