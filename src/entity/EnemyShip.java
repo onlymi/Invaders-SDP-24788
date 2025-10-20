@@ -105,7 +105,7 @@ public class EnemyShip extends Entity {
      * known starting properties.
      */
     public EnemyShip() {
-        super(-32, 60, 16 * 2, 7 * 2, Color.RED);
+        super(-32, 80, 16 * 2, 7 * 2, Color.RED);
 
         this.spriteType = SpriteType.EnemyShipSpecial;
         this.isDestroyed = false;
@@ -204,7 +204,7 @@ public class EnemyShip extends Entity {
             }
             Color color = this.getColor();
             if(initialHealth != 0) {
-                int alpha = (int)Math.clamp(180 * (float)health / initialHealth, 0, 255);
+                int alpha = (int)Math.clamp(70 + 150 * (float)health / initialHealth, 0, 255);
                 color = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
                 changeColor(color);
             }

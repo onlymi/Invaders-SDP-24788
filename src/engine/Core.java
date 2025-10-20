@@ -13,6 +13,7 @@ import screen.*;
 import entity.Ship;
 import screen.*;
 
+
 /**
  * Implements core game logic.
  *
@@ -75,12 +76,11 @@ public final class Core {
 
         int returnCode = 1;
 
-        // Game & score.
-        AchievementManager achievementManager = new AchievementManager(); // add 1P/2P achievement manager
-
         Ship.ShipType shipTypeP1 = Ship.ShipType.NORMAL; // P1 Ship Type
         Ship.ShipType shipTypeP2 = Ship.ShipType.NORMAL; // P2 Ship Type
         do {
+            // Game & score.
+            AchievementManager achievementManager = new AchievementManager(); // add 1P/2P achievement manager
 
             switch (returnCode) {
                 case 1:
