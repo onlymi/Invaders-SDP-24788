@@ -32,6 +32,7 @@ public class EnemyShip extends Entity {
 
     /** Cooldown between sprite changes. */
     private Cooldown animationCooldown;
+    private Cooldown bossAnimationCooldown;
     /** Checks if the ship has been hit by a bullet. */
     private boolean isDestroyed;
     /** Values of the ship, in points, when destroyed. */
@@ -59,6 +60,7 @@ public class EnemyShip extends Entity {
 
         this.spriteType = spriteType;
         this.animationCooldown = Core.getCooldown(500);
+        this.bossAnimationCooldown = Core.getCooldown(500);
         this.isDestroyed = false;
 
         switch (this.spriteType) {

@@ -143,8 +143,7 @@ public final class DrawManager {
             spriteMap.put(SpriteType.ShipDestroyed2, new boolean[13][8]);
             spriteMap.put(SpriteType.ShipDestroyed3, new boolean[13][8]);
             spriteMap.put(SpriteType.ShipDestroyed4, new boolean[13][8]);
-            spriteMap.put(SpriteType.Bullet, new boolean[3][5]);
-            spriteMap.put(SpriteType.EnemyBullet, new boolean[3][5]);
+
             spriteMap.put(SpriteType.EnemyShipA1, new boolean[12][8]);
             spriteMap.put(SpriteType.EnemyShipA2, new boolean[12][8]);
             spriteMap.put(SpriteType.EnemyShipB1, new boolean[12][8]);
@@ -152,9 +151,14 @@ public final class DrawManager {
             spriteMap.put(SpriteType.EnemyShipC1, new boolean[12][8]);
             spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
             spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
+
             spriteMap.put(SpriteType.BossEnemy1, new boolean[21][10]);
             spriteMap.put(SpriteType.BossEnemy2, new boolean[21][10]);
             spriteMap.put(SpriteType.BossEnemy3, new boolean[21][10]);
+
+            spriteMap.put(SpriteType.Bullet, new boolean[3][5]);
+            spriteMap.put(SpriteType.EnemyBullet, new boolean[3][5]);
+
             spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
             spriteMap.put(SpriteType.Heart, new boolean[11][10]);
 

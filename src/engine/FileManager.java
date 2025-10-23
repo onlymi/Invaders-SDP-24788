@@ -2,17 +2,7 @@ package engine;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,20 +57,81 @@ public final class FileManager {
      */
     public void loadSprite(final Map<SpriteType, boolean[][]> spriteMap)
             throws IOException {
-        InputStream inputStream = null;
+        InputStream playerStream = null;
+        InputStream enemyStream = null;
+        InputStream bossStream = null;
+        InputStream bulletStream = null;
+        InputStream mutualStream = null;
+        InputStream itemStream = null;
+
+        InputStream selectedStream = null;
 
         try {
-            inputStream = DrawManager.class.getClassLoader()
-                    .getResourceAsStream("graphics");
+            playerStream = DrawManager.class.getClassLoader()
+                    .getResourceAsStream("graphics/player_graphics");
+            enemyStream = DrawManager.class.getClassLoader()
+                    .getResourceAsStream("graphics/enemy_graphics");
+            bossStream = DrawManager.class.getClassLoader()
+                    .getResourceAsStream("graphics/boss_graphics");
+            bulletStream = DrawManager.class.getClassLoader()
+                    .getResourceAsStream("graphics/bullet_graphics");
+            mutualStream = DrawManager.class.getClassLoader()
+                    .getResourceAsStream("graphics/mutual_graphics");
+            itemStream = DrawManager.class.getClassLoader()
+                    .getResourceAsStream("graphics/item_graphics");
             char c;
 
             // Sprite loading.
             for (Map.Entry<SpriteType, boolean[][]> sprite : spriteMap
                     .entrySet()) {
+
+                switch (sprite.getKey()) {
+                    case Ship1:
+                    case Ship2:
+                    case Ship3:
+                    case Ship4:
+                    case ShipDestroyed1:
+                    case ShipDestroyed2:
+                    case ShipDestroyed3:
+                    case ShipDestroyed4:
+                        selectedStream = playerStream;
+                        break;
+                    case EnemyShipA1:
+                    case EnemyShipA2:
+                    case EnemyShipB1:
+                    case EnemyShipB2:
+                    case EnemyShipC1:
+                    case EnemyShipC2:
+                    case EnemyShipSpecial:
+                        selectedStream = enemyStream;
+                        break;
+                    case BossEnemy1:
+                    case BossEnemy2:
+                    case BossEnemy3:
+                        selectedStream = bossStream;
+                        break;
+                    case Bullet:
+                    case EnemyBullet:
+                        selectedStream = bulletStream;
+                        break;
+                    case Explosion:
+                    case Heart:
+                        selectedStream = mutualStream;
+                        break;
+                    case ItemScore:
+                    case ItemCoin:
+                    case ItemHeal:
+                    case ItemTripleShot:
+                    case ItemScoreBooster:
+                    case ItemBulletSpeedUp:
+                        selectedStream = itemStream;
+                        break;
+                }
+
                 for (int i = 0; i < sprite.getValue().length; i++)
                     for (int j = 0; j < sprite.getValue()[i].length; j++) {
                         do
-                            c = (char) inputStream.read();
+                            c = (char) selectedStream.read();
                         while (c != '0' && c != '1');
 
                         if (c == '1')
@@ -90,11 +141,19 @@ public final class FileManager {
                     }
                 logger.fine("Sprite " + sprite.getKey() + " loaded.");
             }
-            if (inputStream != null)
-                inputStream.close();
         } finally {
-            if (inputStream != null)
-                inputStream.close();
+            if (playerStream != null)
+                playerStream.close();
+            if (enemyStream != null)
+                enemyStream.close();
+            if (bossStream != null)
+                bossStream.close();
+            if (bulletStream != null)
+                bulletStream.close();
+            if (mutualStream != null)
+                mutualStream.close();
+            if (itemStream != null)
+                itemStream.close();
         }
     }
 
