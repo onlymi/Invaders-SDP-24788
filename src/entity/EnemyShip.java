@@ -41,6 +41,7 @@ public class EnemyShip extends Entity {
 
     /** Current health of the enemy ship */
     private int health;
+    private int initialHealth;
 
     /**
      * Constructor, establishes the ship's properties.
@@ -92,10 +93,13 @@ public class EnemyShip extends Entity {
                 this.health = 1;
                 break;
         }
+
+        this.initialHealth = this.health;
     }
 
     public void changeShip(GameSettings.ChangeData changeData) {
         this.health *= changeData.hp;
+        this.initialHealth = this.health;
 
         this.changeColor(changeData.color);
 
@@ -108,7 +112,7 @@ public class EnemyShip extends Entity {
      * known starting properties.
      */
     public EnemyShip() {
-        super(-32, 60, 16 * 2, 7 * 2, Color.RED);
+        super(-32, 80, 16 * 2, 7 * 2, Color.RED);
 
         this.spriteType = SpriteType.EnemyShipSpecial;
         this.isDestroyed = false;
@@ -183,6 +187,9 @@ public class EnemyShip extends Entity {
         if (this.health <= 0) {
             this.isDestroyed = true;
             this.spriteType = SpriteType.Explosion;
+            Color color = this.getColor();
+            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 255);
+            changeColor(color);
         }
 
         else {
@@ -201,6 +208,12 @@ public class EnemyShip extends Entity {
                     break;
                 default:
                     break;
+            }
+            Color color = this.getColor();
+            if(initialHealth != 0) {
+                int alpha = (int)Math.clamp(70 + 150 * (float)health / initialHealth, 0, 255);
+                color = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+                changeColor(color);
             }
         }
     }
