@@ -113,7 +113,7 @@ public final class InputManager implements KeyListener, MouseListener, MouseMoti
     // Player 1 uses WASD + Spacebar configuration
 
     /**
-     * Checks if Player 1's move left key (player1keys[0]) is pressed.
+     * Checks if Player 1's move left key (player1Keys[0]) is pressed.
      *
      * @return True if Player 1 is moving left
      */
@@ -123,7 +123,7 @@ public final class InputManager implements KeyListener, MouseListener, MouseMoti
     }
 
     /**
-     * Checks if Player 1's move right key (player1keys[1]) is pressed.
+     * Checks if Player 1's move right key (player1Keys[1]) is pressed.
      *
      * @return True if Player 1 is moving right
      */
@@ -168,7 +168,7 @@ public final class InputManager implements KeyListener, MouseListener, MouseMoti
     }
 
     /**
-     * Checks if Player 2's shoot key (player2keys[2]) is pressed.
+     * Checks if Player 2's shoot key (player2Keys[2]) is pressed.
      *
      * @return True if Player 2 is shooting
      */
