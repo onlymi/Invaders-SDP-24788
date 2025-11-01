@@ -46,7 +46,7 @@ public final class InputManager implements KeyListener, MouseListener, MouseMoti
      *  Declare variables to save and return input keys
      */
     private int lastPressedKey = -1;
-    private static final String KEY_CONFIG_FILE = "keyconfig.txt";
+    private static final String KEY_CONFIG_FILE = "keyconfig.csv";
 
     protected static int[] player1Keys;
     protected static int[] player2Keys;
@@ -228,12 +228,12 @@ public final class InputManager implements KeyListener, MouseListener, MouseMoti
         lastCharTyped = '\0' ;
         charTyped = false ;
     }
-    // Create and return a project path/res/keyconfig.txt file object
+    // Create and return a project path/res/keyconfig.csv file object
     private File getKeyConfigFile() {
         String projectPath = System.getProperty("user.dir");
         return new File(projectPath + File.separator + "res" + File.separator + KEY_CONFIG_FILE);
     }
-    // write a key code in a keyconfig.txt file
+    // write a key code in a keyconfig.csv file
     public void saveKeyConfig() {
         try {
             File file = getKeyConfigFile();
@@ -351,5 +351,32 @@ public final class InputManager implements KeyListener, MouseListener, MouseMoti
 	public boolean isMousePressed(){
 		return mousePressed;
 	}
+
+    public String getKeyString(int keyCode) {
+        switch (keyCode) {
+            case KeyEvent.VK_LEFT: return "LEFT";
+            case KeyEvent.VK_RIGHT: return "RIGHT";
+            case KeyEvent.VK_UP: return "UP";
+            case KeyEvent.VK_DOWN: return "DOWN";
+            case KeyEvent.VK_SPACE: return "SPACE";
+            case KeyEvent.VK_ENTER: return "ENTER";
+            case KeyEvent.VK_BACK_SPACE: return "BACK_SPACE";
+            case KeyEvent.VK_TAB: return "TAB";
+            case KeyEvent.VK_CANCEL: return "CANCEL";
+            case KeyEvent.VK_F1: return "F1";
+            case KeyEvent.VK_F2: return "F2";
+            case KeyEvent.VK_F3: return "F3";
+            case KeyEvent.VK_F4: return "F4";
+            case KeyEvent.VK_F5: return "F5";
+            case KeyEvent.VK_F6: return "F6";
+            case KeyEvent.VK_F7: return "F7";
+            case KeyEvent.VK_F8: return "F8";
+            case KeyEvent.VK_F9: return "F9";
+            case KeyEvent.VK_F10: return "F10";
+            case KeyEvent.VK_F11: return "F11";
+            case KeyEvent.VK_F12: return "F12";
+            default: return KeyEvent.getKeyText(keyCode).toUpperCase();
+        }
+    }
 
 }

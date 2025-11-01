@@ -1003,10 +1003,12 @@ public final class DrawManager {
 
         String[] labels = {"MOVE LEFT :", "MOVE RIGHT:", "ATTACK :"};
         String[] keys = new String[3];
+        String[] keys_string = new String[3];
 
         for (int i = 0; i < labels.length; i++) {
             int textY = y + 70 + (i * 50);
             keys[i] = KeyEvent.getKeyText(currentKeys[i]); // Convert set key codes to characters
+            keys_string[i] = InputManager.getInstance().getKeyString(currentKeys[i]);
             // draw the dividing line
             if (i < labels.length - 1) {
                 backBufferGraphics.setColor(Color.DARK_GRAY);
@@ -1024,7 +1026,7 @@ public final class DrawManager {
             // draw key
             backBufferGraphics.drawString(labels[i], x + 30, textY);
             backBufferGraphics.setColor(Color.WHITE);
-            backBufferGraphics.drawString(keys[i], x + 150, textY);
+            backBufferGraphics.drawString(keys_string[i], x + 150, textY);
         }
 
     }
