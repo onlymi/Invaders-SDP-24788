@@ -1,6 +1,5 @@
 package engine;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
@@ -47,7 +46,7 @@ public final class InputManager implements KeyListener, MouseListener, MouseMoti
      *  Declare variables to save and return input keys
      */
     private int lastPressedKey = -1;
-    private static final String KEY_CONFIG_FILE = "keyconfig.txt";
+    private static final String KEY_CONFIG_FILE = "keyconfig.csv";
 
     protected static int[] player1Keys;
     protected static int[] player2Keys;
@@ -229,12 +228,12 @@ public final class InputManager implements KeyListener, MouseListener, MouseMoti
         lastCharTyped = '\0' ;
         charTyped = false ;
     }
-    // Create and return a project path/res/keyconfig.txt file object
+    // Create and return a project path/res/keyconfig.csv file object
     private File getKeyConfigFile() {
         String projectPath = System.getProperty("user.dir");
         return new File(projectPath + File.separator + "res" + File.separator + KEY_CONFIG_FILE);
     }
-    // write a key code in a keyconfig.txt file
+    // write a key code in a keyconfig.csv file
     public void saveKeyConfig() {
         try {
             File file = getKeyConfigFile();
