@@ -114,7 +114,7 @@ public final class DrawManager {
         /** Destroyed enemy ship. */
         Explosion,
         /** Heart for lives display. */
-        Heart, //추가
+        Heart,
         /** Item Graphics Temp */
         ItemScore,
         ItemCoin,
@@ -134,7 +134,7 @@ public final class DrawManager {
 
         try {
             spriteMap = new LinkedHashMap<SpriteType, boolean[][]>();
-
+            // Player graphics
             spriteMap.put(SpriteType.Ship1, new boolean[13][8]);
             spriteMap.put(SpriteType.Ship2, new boolean[13][8]);
             spriteMap.put(SpriteType.Ship3, new boolean[13][8]);
@@ -143,7 +143,7 @@ public final class DrawManager {
             spriteMap.put(SpriteType.ShipDestroyed2, new boolean[13][8]);
             spriteMap.put(SpriteType.ShipDestroyed3, new boolean[13][8]);
             spriteMap.put(SpriteType.ShipDestroyed4, new boolean[13][8]);
-
+            // Enemy graphics
             spriteMap.put(SpriteType.EnemyShipA1, new boolean[12][8]);
             spriteMap.put(SpriteType.EnemyShipA2, new boolean[12][8]);
             spriteMap.put(SpriteType.EnemyShipB1, new boolean[12][8]);
@@ -151,18 +151,17 @@ public final class DrawManager {
             spriteMap.put(SpriteType.EnemyShipC1, new boolean[12][8]);
             spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
             spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
-
+            // Boss graphics
             spriteMap.put(SpriteType.BossEnemy1, new boolean[21][10]);
             spriteMap.put(SpriteType.BossEnemy2, new boolean[21][10]);
             spriteMap.put(SpriteType.BossEnemy3, new boolean[21][10]);
-
+            // Weapon graphics
             spriteMap.put(SpriteType.Bullet, new boolean[3][5]);
             spriteMap.put(SpriteType.EnemyBullet, new boolean[3][5]);
-
+            // Mutual graphics
             spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
             spriteMap.put(SpriteType.Heart, new boolean[11][10]);
-
-            // Item sprite placeholder
+            // Item graphics
             spriteMap.put(SpriteType.ItemScore, new boolean[5][5]);
             spriteMap.put(SpriteType.ItemCoin, new boolean[5][5]);
             spriteMap.put(SpriteType.ItemHeal, new boolean[5][5]);
@@ -173,7 +172,7 @@ public final class DrawManager {
             fileManager.loadSprite(spriteMap);
             logger.info("Finished loading the sprites.");
 
-            // Font loading.
+            // Font loading
             fontRegular = fileManager.loadFont(14f);
             fontBig = fileManager.loadFont(24f);
             logger.info("Finished loading the fonts.");
@@ -257,6 +256,41 @@ public final class DrawManager {
         boolean[][] image = spriteMap.get(entity.getSpriteType());
 
         // 2P mode: start with the entity's own color
+        final Color color = getColor(entity);
+
+        // --- Scaling logic ---
+        // Original sprite dimensions
+        int spriteWidth = image.length;
+        int spriteHeight = image[0].length;
+
+        // Entity dimensions (modified via Bullet constructor or other entities)
+        int entityWidth = entity.getWidth();
+        int entityHeight = entity.getHeight();
+
+        // Calculate scaling ratios compared to original sprite
+        float widthRatio = (float) entityWidth / (spriteWidth * 2);
+        float heightRatio = (float) entityHeight / (spriteHeight * 2);
+        // --- End of scaling logic ---
+
+        // Set drawing color again
+        backBufferGraphics.setColor(color);
+        // Draw the sprite with scaling applied
+        for (int i = 0; i < spriteWidth; i++) {
+            for (int j = 0; j < spriteHeight; j++) {
+                if (image[i][j]) {
+                    // Apply calculated scaling ratio to pixel positions and size
+                    backBufferGraphics.fillRect(
+                            positionX + (int)(i * 2 * widthRatio),
+                            positionY + (int)(j * 2 * heightRatio),
+                            (int)Math.ceil(widthRatio * 2), // Adjust the width of the pixel
+                            (int)Math.ceil(heightRatio * 2) // Adjust the height of the pixel
+                    );
+                }
+            }
+        }
+    }
+
+    private static Color getColor(Entity entity) {
         Color color = entity.getColor();
 
         // Color-code by player when applicable
@@ -292,37 +326,7 @@ public final class DrawManager {
                 color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 32);
             }
         }
-
-        // --- Scaling logic ---
-        // Original sprite dimensions
-        int spriteWidth = image.length;
-        int spriteHeight = image[0].length;
-
-        // Entity dimensions (modified via Bullet constructor or other entities)
-        int entityWidth = entity.getWidth();
-        int entityHeight = entity.getHeight();
-
-        // Calculate scaling ratios compared to original sprite
-        float widthRatio = (float) entityWidth / (spriteWidth * 2);
-        float heightRatio = (float) entityHeight / (spriteHeight * 2);
-        // --- End of scaling logic ---
-
-        // Set drawing color again
-        backBufferGraphics.setColor(color);
-        // Draw the sprite with scaling applied
-        for (int i = 0; i < spriteWidth; i++) {
-            for (int j = 0; j < spriteHeight; j++) {
-                if (image[i][j]) {
-                    // Apply calculated scaling ratio to pixel positions and size
-                    backBufferGraphics.fillRect(
-                            positionX + (int)(i * 2 * widthRatio),
-                            positionY + (int)(j * 2 * heightRatio),
-                            (int)Math.ceil(widthRatio * 2), // Adjust the width of the pixel
-                            (int)Math.ceil(heightRatio * 2) // Adjust the height of the pixel
-                    );
-                }
-            }
-        }
+        return color;
     }
 
 

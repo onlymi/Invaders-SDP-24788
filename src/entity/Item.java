@@ -30,7 +30,6 @@ public class Item extends Entity {
      *
      * @param itemType
      *            Type of Item being spawned
-     *
      * @param positionX
      *            Initial position of the Item in the X axis.
      * @param positionY
@@ -98,7 +97,7 @@ public class Item extends Entity {
 
         boolean applied = false;
         /* item data always true to apply because free
-        * duration item will apply if enough coins*/
+           duration item will apply if enough coins */
         switch (this.type) {
             case "COIN":
                 ItemEffect.applyCoinItem(gameState, playerId, value);

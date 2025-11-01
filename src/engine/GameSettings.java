@@ -134,7 +134,7 @@ public class GameSettings {
 		GameSettings setting;
 
 		try {
-			stageDataList = parseStages(Paths.get("res", "level.csv"));
+			stageDataList = parseStages(Paths.get("res", "game_data/level.csv"));
 			for(StageData s : stageDataList) {
 				setting = s.settings;
 				setting.changeDataList = new ArrayList<>();

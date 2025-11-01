@@ -46,7 +46,7 @@ public final class InputManager implements KeyListener, MouseListener, MouseMoti
      *  Declare variables to save and return input keys
      */
     private int lastPressedKey = -1;
-    private static final String KEY_CONFIG_FILE = "keyconfig.csv";
+    private static final String KEY_CONFIG_FILE = "game_data/keyconfig.csv";
 
     protected static int[] player1Keys;
     protected static int[] player2Keys;

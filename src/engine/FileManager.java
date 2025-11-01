@@ -176,7 +176,7 @@ public final class FileManager {
         try {
             // Font loading.
             inputStream = FileManager.class.getClassLoader()
-                    .getResourceAsStream("font.ttf");
+                    .getResourceAsStream("font/font.ttf");
             font = Font.createFont(Font.TRUETYPE_FONT, inputStream).deriveFont(
                     size);
         } finally {
@@ -216,7 +216,7 @@ public final class FileManager {
         BufferedReader reader;
 
         try {
-            inputStream = FileManager.class.getClassLoader().getResourceAsStream("1Pscores.csv");
+            inputStream = FileManager.class.getClassLoader().getResourceAsStream("game_data/1Pscores.csv");
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
             // except first line
@@ -331,7 +331,7 @@ public final class FileManager {
         List<Boolean> achievementList = new ArrayList<>();
 
         try {
-            String achievementPath = getFilePath("achievement.csv");
+            String achievementPath = getFilePath("game_data/achievement.csv");
 
             try (BufferedReader bReader = new BufferedReader(
                     new InputStreamReader(new FileInputStream(achievementPath), StandardCharsets.UTF_8))) {
@@ -390,7 +390,7 @@ public final class FileManager {
         String numericMode = mode.replaceAll("[^0-9]", "");
 
         try {
-            String achievementPath = getFilePath("achievement.csv");
+            String achievementPath = getFilePath("game_data/achievement.csv");
 
             try (BufferedReader bReader = new BufferedReader(
                     new InputStreamReader(new FileInputStream(achievementPath), StandardCharsets.UTF_8))) {
@@ -465,7 +465,7 @@ public final class FileManager {
     public List<String> getAchievementCompleter(Achievement achievement) {
         List<String> completer = new ArrayList<>();
         try {
-            String achievementPath = getFilePath("achievement.csv");
+            String achievementPath = getFilePath("game_data/achievement.csv");
 
             try (BufferedReader bReader = new BufferedReader(
                     new InputStreamReader(new FileInputStream(achievementPath), StandardCharsets.UTF_8))) {

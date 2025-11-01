@@ -37,7 +37,6 @@ public final class Core {
     private static final Logger LOGGER = Logger.getLogger(Core.class.getSimpleName());
     private static Handler fileHandler;
     private static ConsoleHandler consoleHandler;
-    private static int NUM_LEVELS; // Total number of levels
 
     /**
      * Test implementation.
@@ -67,7 +66,7 @@ public final class Core {
         int height = frame.getHeight();
 
         gameSettings = GameSettings.getGameSettings();
-        NUM_LEVELS = gameSettings.size(); // Initialize total number of levels
+        int NUM_LEVELS = gameSettings.size(); // Initialize total number of levels
 
 
         // 2P mode: modified to null to allow for switch between 2 modes
@@ -234,7 +233,6 @@ public final class Core {
     /**
      * Controls access to the logger.
      *
-     *
      * @return Application logger.
      */
     public static Logger getLogger() {
@@ -311,4 +309,14 @@ public final class Core {
     public static void setVolumeLevel(int v) {
         volumeLevel = Math.max(0, Math.min(100, v));
     }
+
+    public static void achievementSystem() {}
+
+    public static void gamePlaySystem() {}
+
+    public static void settingSystem() {}
+
+    public static void shipSelectionSystem() {}
+
+    public static void highScoreSystem() {}
 }
