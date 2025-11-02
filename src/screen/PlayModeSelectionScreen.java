@@ -1,6 +1,5 @@
 package screen;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import engine.Cooldown;
 import engine.Core;
@@ -11,7 +10,7 @@ import engine.Core;
  *
  */
 
-public class PlayScreen extends Screen {
+public class PlayModeSelectionScreen extends Screen {
     private boolean coopSelected = false;
     public boolean isCoopSelected() { return coopSelected; }
     private static final int SELECTION_TIME = 200;
@@ -26,7 +25,7 @@ public class PlayScreen extends Screen {
  * @param fps    Frames per second, frame rate at which the game is run.
  *  **/
 
-    public PlayScreen(final int width, final int height, final int fps) {
+    public PlayModeSelectionScreen(final int width, final int height, final int fps) {
         super(width, height, fps);
         this.returnCode = 2; // default 1P
         this.selectionCooldown = Core.getCooldown(SELECTION_TIME);

@@ -17,10 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import Animations.BasicGameSpace;
-import Animations.Explosion;
-import Animations.MenuSpace;
-import com.sun.tools.javac.Main;
+import animations.BasicGameSpace;
+import animations.Explosion;
+import animations.MenuSpace;
 import screen.Screen;
 import entity.Entity;
 import entity.Ship;

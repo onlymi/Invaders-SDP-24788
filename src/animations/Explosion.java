@@ -1,9 +1,6 @@
-package Animations;
+package animations;
 
-import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 public class Explosion {

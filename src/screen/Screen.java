@@ -103,7 +103,8 @@ public class Screen {
 	 * Updates the elements on screen and checks for events.
 	 */
 	protected void update() {
-	}
+
+    }
 
 	/**
 	 * Getter for screen width.

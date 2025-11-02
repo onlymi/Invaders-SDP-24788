@@ -203,35 +203,18 @@ public final class FileManager {
     }
 
     /**
-     * Returns the application default scores if there is no user high scores
-     * file.
+     * Returns the application default scores if there is no user high scores file.
      *
      * @return Default high scores.
-     * @throws IOException
      *             In case of loading problems.
      */
-    private List<Score> loadDefaultHighScores() throws IOException {
+    private List<Score> loadDefaultHighScores(String mode) {
         List<Score> highScores = new ArrayList<>();
-        InputStream inputStream = null;
-        BufferedReader reader;
-
-        try {
-            inputStream = FileManager.class.getClassLoader().getResourceAsStream("game_data/1Pscores.csv");
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            // except first line
-            reader.readLine();
-            String input;
-            while ((input = reader.readLine()) != null) {
-                String[] pair = input.split(",");
-                String name = pair[0], score = pair[1];
-                String mode = pair[2];
-                Score highScore = new Score(name, Integer.parseInt(score), mode);
-                highScores.add(highScore);
-            }
-        } finally {
-            if (inputStream != null)
-                inputStream.close();
+        int list_size = 7;
+        Score highScore;
+        for (int i = 0; i < list_size; i++) {
+            highScore = new Score("ERR", 0, mode);
+            highScores.add(highScore);
         }
 
         return highScores;
@@ -252,7 +235,7 @@ public final class FileManager {
         BufferedReader bufferedReader = null;
 
         try {
-            String scoresPath = getFilePath(mode+"scores.csv");
+            String scoresPath = getFilePath("game_data/"+mode+"_scores.csv");
 
             File scoresFile = new File(scoresPath);
             inputStream = new FileInputStream(scoresFile);
@@ -270,7 +253,7 @@ public final class FileManager {
         } catch (FileNotFoundException e) {
             // loads default if there's no user scores.
             logger.info("Loading default high scores.");
-            highScores = loadDefaultHighScores();
+            highScores = loadDefaultHighScores(mode);
         } finally {
             if (bufferedReader != null)
                 bufferedReader.close();
@@ -296,7 +279,7 @@ public final class FileManager {
         BufferedWriter bufferedWriter = null;
 
         try {
-            String scoresPath = getFilePath(mode+"scores.csv");
+            String scoresPath = getFilePath("game_data/"+mode+"_scores.csv");
 
             File scoresFile = new File(scoresPath);
 

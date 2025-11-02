@@ -184,7 +184,7 @@ public class ScoreScreen extends Screen {
      * Add ability that distinguish duplicate names and save higher scores
      */
     private void saveScore() {
-        String mode = (gameState != null && gameState.isCoop()) ? "2P" : "1P";
+        String mode = (gameState != null && gameState.isCoop()) ? "2p" : "1p";
         String newName = new String(this.name);
         Score newScore = new Score(newName, this.gameState, mode);
         boolean foundAndReplaced = false;

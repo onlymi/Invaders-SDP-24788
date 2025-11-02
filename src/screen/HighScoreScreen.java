@@ -37,8 +37,8 @@ public class HighScoreScreen extends Screen {
         this.returnCode = 1;
 
         try {
-            this.highScores1P = Core.getFileManager().loadHighScores("1P");
-            this.highScores2P = Core.getFileManager().loadHighScores("2P");
+            this.highScores1P = Core.getFileManager().loadHighScores("1p");
+            this.highScores2P = Core.getFileManager().loadHighScores("2p");
             //상위 7명만 남기기
             highScores1P.sort((a, b) -> b.getScore() - a.getScore());
             if (highScores1P.size() > 7) highScores1P = highScores1P.subList(0, 7);
