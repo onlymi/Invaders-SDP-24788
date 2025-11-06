@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import engine.DrawManager.SpriteType;
+import engine.AssetManager.SpriteType;
+import engine.gameplay.achievement.Achievement;
 
 /**
  * Manages files used in the application.
@@ -26,13 +27,13 @@ public final class FileManager {
     /**
      * Application logger.
      */
-    private static Logger logger;
+    private static Logger LOGGER;
 
     /**
      * private constructor.
      */
     private FileManager() {
-        logger = Core.getLogger();
+        LOGGER = Core.getLogger();
     }
 
     /**
@@ -40,166 +41,10 @@ public final class FileManager {
      *
      * @return Shared instance of FileManager.
      */
-    protected static FileManager getInstance() {
+    public static FileManager getInstance() {
         if (instance == null)
             instance = new FileManager();
         return instance;
-    }
-
-    /**
-     * Loads sprites from disk.
-     *
-     * @param spriteMap
-     *            Mapping of sprite type and empty boolean matrix that will
-     *            contain the image.
-     * @throws IOException
-     *             In case of loading problems.
-     */
-    public void loadSprite(final Map<SpriteType, boolean[][]> spriteMap)
-            throws IOException {
-        InputStream playerStream = null;
-        InputStream enemyStream = null;
-        InputStream bossStream = null;
-        InputStream bulletStream = null;
-        InputStream mutualStream = null;
-        InputStream itemStream = null;
-
-        InputStream selectedStream = null;
-
-        try {
-            playerStream = DrawManager.class.getClassLoader()
-                    .getResourceAsStream("graphics/player_graphics");
-            enemyStream = DrawManager.class.getClassLoader()
-                    .getResourceAsStream("graphics/enemy_graphics");
-            bossStream = DrawManager.class.getClassLoader()
-                    .getResourceAsStream("graphics/boss_graphics");
-            bulletStream = DrawManager.class.getClassLoader()
-                    .getResourceAsStream("graphics/bullet_graphics");
-            mutualStream = DrawManager.class.getClassLoader()
-                    .getResourceAsStream("graphics/mutual_graphics");
-            itemStream = DrawManager.class.getClassLoader()
-                    .getResourceAsStream("graphics/item_graphics");
-            char c;
-
-            // Sprite loading.
-            for (Map.Entry<SpriteType, boolean[][]> sprite : spriteMap
-                    .entrySet()) {
-
-                switch (sprite.getKey()) {
-                    case Ship1:
-                    case Ship2:
-                    case Ship3:
-                    case Ship4:
-                    case ShipDestroyed1:
-                    case ShipDestroyed2:
-                    case ShipDestroyed3:
-                    case ShipDestroyed4:
-                        selectedStream = playerStream;
-                        break;
-                    case EnemyShipA1:
-                    case EnemyShipA2:
-                    case EnemyShipB1:
-                    case EnemyShipB2:
-                    case EnemyShipC1:
-                    case EnemyShipC2:
-                    case EnemyShipSpecial:
-                        selectedStream = enemyStream;
-                        break;
-                    case BossEnemy1:
-                    case BossEnemy2:
-                    case BossEnemy3:
-                        selectedStream = bossStream;
-                        break;
-                    case Bullet:
-                    case EnemyBullet:
-                        selectedStream = bulletStream;
-                        break;
-                    case Explosion:
-                    case Heart:
-                        selectedStream = mutualStream;
-                        break;
-                    case ItemScore:
-                    case ItemCoin:
-                    case ItemHeal:
-                    case ItemTripleShot:
-                    case ItemScoreBooster:
-                    case ItemBulletSpeedUp:
-                        selectedStream = itemStream;
-                        break;
-                }
-
-                for (int i = 0; i < sprite.getValue().length; i++)
-                    for (int j = 0; j < sprite.getValue()[i].length; j++) {
-                        do
-                            c = (char) selectedStream.read();
-                        while (c != '0' && c != '1');
-
-                        if (c == '1')
-                            sprite.getValue()[i][j] = true;
-                        else
-                            sprite.getValue()[i][j] = false;
-                    }
-                logger.fine("Sprite " + sprite.getKey() + " loaded.");
-            }
-        } finally {
-            if (playerStream != null)
-                playerStream.close();
-            if (enemyStream != null)
-                enemyStream.close();
-            if (bossStream != null)
-                bossStream.close();
-            if (bulletStream != null)
-                bulletStream.close();
-            if (mutualStream != null)
-                mutualStream.close();
-            if (itemStream != null)
-                itemStream.close();
-        }
-    }
-
-    /**
-     * Loads a font of a given size.
-     *
-     * @param size
-     *            Point size of the font.
-     * @return New font.
-     * @throws IOException
-     *             In case of loading problems.
-     * @throws FontFormatException
-     *             In case of incorrect font format.
-     */
-    public Font loadFont(final float size) throws IOException,
-            FontFormatException {
-        InputStream inputStream = null;
-        Font font;
-
-        try {
-            // Font loading.
-            inputStream = FileManager.class.getClassLoader()
-                    .getResourceAsStream("font/font.ttf");
-            font = Font.createFont(Font.TRUETYPE_FONT, inputStream).deriveFont(
-                    size);
-        } finally {
-            if (inputStream != null)
-                inputStream.close();
-        }
-
-        return font;
-    }
-
-    /**
-     * Returns the filepath
-     *
-     * @param fileName
-     *      file to get path
-     * @return full file path
-     * @throws IOException
-     *      In case of loading problems
-     * */
-    private static String getFilePath(String fileName) throws IOException {
-        String filePath = System.getProperty("user.dir");
-        filePath += File.separator + "res" + File.separator + fileName;
-        return filePath;
     }
 
     /**
@@ -240,7 +85,7 @@ public final class FileManager {
             File scoresFile = new File(scoresPath);
             inputStream = new FileInputStream(scoresFile);
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-            logger.info("Loading user high scores.");
+            LOGGER.info("Loading user high scores.");
             // except first line
             bufferedReader.readLine();
             String input;
@@ -252,7 +97,7 @@ public final class FileManager {
             }
         } catch (FileNotFoundException e) {
             // loads default if there's no user scores.
-            logger.info("Loading default high scores.");
+            LOGGER.info("Loading default high scores.");
             highScores = loadDefaultHighScores(mode);
         } finally {
             if (bufferedReader != null)
@@ -289,7 +134,7 @@ public final class FileManager {
             outputStream = new FileOutputStream(scoresFile);
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
 
-            logger.info("Saving user high scores.");
+            LOGGER.info("Saving user high scores.");
             bufferedWriter.write("player,score");
             bufferedWriter.newLine();
 
@@ -302,6 +147,21 @@ public final class FileManager {
             if (bufferedWriter != null)
                 bufferedWriter.close();
         }
+    }
+
+    /**
+     * Returns the filepath
+     *
+     * @param fileName
+     *      file to get path
+     * @return full file path
+     * @throws IOException
+     *      In case of loading problems
+     * */
+    private static String getFilePath(String fileName) throws IOException {
+        String filePath = System.getProperty("user.dir");
+        filePath += File.separator + "res" + File.separator + fileName;
+        return filePath;
     }
 
     /**
@@ -332,7 +192,7 @@ public final class FileManager {
 
                     if (name.equals(userName)) {
                         found = true;
-                        logger.info("Loading user achievements.");
+                        LOGGER.info("Loading user achievements.");
                         // Achievements start from index 2
                         for (int i = 2; i < playRecord.length; i++) {
                             achievementList.add(playRecord[i].equals("1"));
@@ -342,7 +202,7 @@ public final class FileManager {
                 }
 
                 if (!found) {
-                    logger.info("Loading default achievements.");
+                    LOGGER.info("Loading default achievements.");
                     for (int i = 0; i < 5; i++) { // Default to 5 achievements, all set to false
                         achievementList.add(false);
                     }
@@ -350,7 +210,7 @@ public final class FileManager {
             }
 
         } catch (FileNotFoundException e) {
-            logger.info("Achievement file not found, loading default achievements.");
+            LOGGER.info("Achievement file not found, loading default achievements.");
             for (int i = 0; i < 5; i++) {
                 achievementList.add(false);
             }
@@ -393,7 +253,7 @@ public final class FileManager {
                     String currentMode = playRecord[0].trim();
                     String name = playRecord[1].trim();
 
-                    // ✅ Match both user name and mode to consider it the same record
+                    // Match both username and mode to consider it the same record
                     if (name.equals(userName) && currentMode.equals(numericMode)) {
                         found = true;
                         Logger.getLogger(getClass().getName()).info("Achievement has been updated.");
@@ -434,9 +294,6 @@ public final class FileManager {
         }
     }
 
-
-
-
     /**
      * Returns a list of users who have completed a specific achievement.
      *
@@ -466,7 +323,7 @@ public final class FileManager {
                 }
 
                 if (idx == -1) {
-                    logger.warning("Achievement not found: " + achievement.getName());
+                    LOGGER.warning("Achievement not found: " + achievement.getName());
                     return completer;
                 }
 
@@ -487,7 +344,7 @@ public final class FileManager {
             }
 
         } catch (IOException e) {
-            logger.warning("Error reading achievement file. Returning default users...");
+            LOGGER.warning("Error reading achievement file. Returning default users...");
             completer.add("1:ABC");
             completer.add("2:DEF");
         }

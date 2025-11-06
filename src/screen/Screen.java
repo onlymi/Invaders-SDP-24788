@@ -4,10 +4,8 @@ import java.awt.Insets;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import engine.Cooldown;
-import engine.Core;
-import engine.DrawManager;
-import engine.InputManager;
+import engine.*;
+import engine.utils.Cooldown;
 
 /**
  * Implements a generic screen.
@@ -24,8 +22,14 @@ public class Screen {
 	protected DrawManager drawManager;
 	/** Input Manager instance. */
 	protected InputManager inputManager;
+    /** File Manager instance. */
+    protected FileManager fileManager;
+    /** Asset Manager instance. */
+    protected AssetManager assetManager;
+    /** Sound Manager instance. */
+    protected SoundManager soundManager;
 	/** Application logger. */
-	protected Logger logger;
+	protected Logger LOGGER;
 
 	/** Screen width. */
 	protected int width;
@@ -60,7 +64,11 @@ public class Screen {
 
 		this.drawManager = Core.getDrawManager();
 		this.inputManager = Core.getInputManager();
-		this.logger = Core.getLogger();
+        this.fileManager = Core.getFileManager();
+        this.assetManager = Core.getAssetManager();
+        this.soundManager = Core.getSoundManager();
+
+		this.LOGGER = Core.getLogger();
 		this.inputDelay = Core.getCooldown(INPUT_DELAY);
 		this.inputDelay.reset();
 		this.returnCode = 0;

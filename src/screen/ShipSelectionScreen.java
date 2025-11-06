@@ -2,7 +2,7 @@ package screen;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import engine.Cooldown;
+import engine.utils.Cooldown;
 import engine.Core;
 import entity.Entity;
 import entity.Ship;
@@ -13,6 +13,7 @@ public class ShipSelectionScreen extends Screen {
     private Cooldown selectionCooldown;
     private int selectedShipIndex = 0; // 0: NORMAL, 1: BIG_SHOT, 2: DOUBLE_SHOT, 3: MOVE_FAST
     private Ship[] shipExamples = new Ship[4];
+    Ship.ShipType[] shipType;
 
     private int player;
     private boolean backSelected = false; // If current state is on the back button, can't select ship
@@ -23,19 +24,17 @@ public class ShipSelectionScreen extends Screen {
         this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
         this.selectionCooldown.reset();
 
-        if (player == 1) {
-            shipExamples[0] = new Ship(width / 2 - 100, height / 2, Entity.Team.PLAYER1, Ship.ShipType.NORMAL, null);
-            shipExamples[1] = new Ship(width / 2 - 35, height / 2, Entity.Team.PLAYER1, Ship.ShipType.BIG_SHOT, null);
-            shipExamples[2] = new Ship(width / 2 + 35, height / 2, Entity.Team.PLAYER1, Ship.ShipType.DOUBLE_SHOT, null);
-            shipExamples[3] = new Ship(width / 2 + 100, height / 2, Entity.Team.PLAYER1, Ship.ShipType.MOVE_FAST, null);
-        } else if (player == 2) {
-            shipExamples[0] = new Ship(width / 2 - 100, height / 2, Entity.Team.PLAYER2, Ship.ShipType.NORMAL, null);
-            shipExamples[1] = new Ship(width / 2 - 35, height / 2, Entity.Team.PLAYER2, Ship.ShipType.BIG_SHOT, null);
-            shipExamples[2] = new Ship(width / 2 + 35, height / 2, Entity.Team.PLAYER2, Ship.ShipType.DOUBLE_SHOT, null);
-            shipExamples[3] = new Ship(width / 2 + 100, height / 2, Entity.Team.PLAYER2, Ship.ShipType.MOVE_FAST, null);
+        shipType = new Ship.ShipType[]{Ship.ShipType.NORMAL, Ship.ShipType.BIG_SHOT, Ship.ShipType.DOUBLE_SHOT, Ship.ShipType.MOVE_FAST};
+        int initialX_width = -100;
+
+        for (int i = 0; i < shipExamples.length; i++) {
+            int positionX = width / 2 + (initialX_width + (200 / (shipExamples.length - 1)) * i);
+            if (player == 1) {
+                shipExamples[i] = new Ship(positionX, height / 2, Entity.Team.PLAYER1, shipType[i], null);
+            } else if (player == 2) {
+                shipExamples[i] = new Ship(positionX, height / 2, Entity.Team.PLAYER2, shipType[i], null);
+            }
         }
-
-
     }
 
     /**
@@ -44,17 +43,12 @@ public class ShipSelectionScreen extends Screen {
      * @return The selected ShipType enum.
      */
     public Ship.ShipType getSelectedShipType() {
-        switch (this.selectedShipIndex) {
-            case 1:
-                return Ship.ShipType.BIG_SHOT;
-            case 2:
-                return Ship.ShipType.DOUBLE_SHOT;
-            case 3:
-                return Ship.ShipType.MOVE_FAST;
-            case 0:
-            default:
-                return Ship.ShipType.NORMAL;
-        }
+        return switch (this.selectedShipIndex) {
+            case 1 -> Ship.ShipType.BIG_SHOT;
+            case 2 -> Ship.ShipType.DOUBLE_SHOT;
+            case 3 -> Ship.ShipType.MOVE_FAST;
+            default -> Ship.ShipType.NORMAL;
+        };
     }
 
     public final int run() {
@@ -99,7 +93,7 @@ public class ShipSelectionScreen extends Screen {
             int my = inputManager.getMouseY();
             boolean clicked = inputManager.isMouseClicked();
 
-            java.awt.Rectangle backBox = drawManager.getBackButtonHitbox(this);
+            Rectangle backBox = Core.getHitboxManager().getBackButtonHitbox(drawManager.getBackBufferGraphics(), this);
 
             if (clicked && backBox.contains(mx, my)) {
                 if (player == 1) this.returnCode = 5;
@@ -113,14 +107,14 @@ public class ShipSelectionScreen extends Screen {
     private void draw() {
         drawManager.initDrawing(this);
 
-        drawManager.drawShipSelectionMenu(this, shipExamples, this.selectedShipIndex, this.player);
+        drawManager.getShipSelectionMenuRenderer().drawShipSelectionMenu(drawManager.getBackBufferGraphics(), this, shipExamples, this.selectedShipIndex, this.player);
 
         // hover highlight
         int mx = inputManager.getMouseX();
         int my = inputManager.getMouseY();
-        java.awt.Rectangle backBox = drawManager.getBackButtonHitbox(this);
+        Rectangle backBox = Core.getHitboxManager().getBackButtonHitbox(drawManager.getBackBufferGraphics(), this);
         boolean backHover = backBox.contains(mx, my);
-        drawManager.drawBackButton(this, backHover || backSelected);
+        drawManager.getCommonRenderer().drawBackButton(drawManager.getBackBufferGraphics(), this, backHover || backSelected);
 
         drawManager.completeDrawing(this);
     }

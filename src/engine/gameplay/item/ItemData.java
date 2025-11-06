@@ -1,4 +1,4 @@
-package engine;
+package engine.gameplay.item;
 
 /**
  * Represents the data for an item, including its type, sprite, tier, effect value, and duration.

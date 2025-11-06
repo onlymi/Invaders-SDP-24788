@@ -3,12 +3,11 @@ package entity;
 import java.awt.Color;
 import java.util.Set;
 
-import engine.Cooldown;
+import engine.utils.Cooldown;
 import engine.Core;
 import engine.GameState;
-import engine.DrawManager.SpriteType;
-
-import static engine.ItemEffect.ItemEffectType.*;
+import engine.AssetManager.SpriteType;
+import static engine.gameplay.item.ItemEffect.*;
 
 /**
  * Implements a ship, to be controlled by the player.
@@ -257,13 +256,13 @@ public class Ship extends Entity {
      *                              list of active effects
      */
     private boolean hasTripleShotEffect() {
-        return gameState != null && gameState.hasEffect(playerIndex, TRIPLESHOT);
+        return gameState != null && gameState.hasEffect(playerIndex, ItemEffectType.TRIPLESHOT);
     }
 
     private int getBulletSpeedMultiplier() {
         if (gameState == null) return 1;
 
-        Integer effectValue = gameState.getEffectValue(playerIndex, BULLETSPEEDUP);
+        Integer effectValue = gameState.getEffectValue(playerIndex, ItemEffectType.BULLETSPEEDUP);
         if (effectValue != null) {
             Core.getLogger().info("[Ship] Item effect: Faster Bullets");
             return effectValue;
@@ -280,7 +279,7 @@ public class Ship extends Entity {
      */
     private void shootTripleShot(final Set<Bullet> bullets, final int centerX, final int bulletY) {
         Core.getLogger().info("[Ship] Item effect: TRIPLESHOT");
-        Integer TRIPLE_SHOT_OFFSET = gameState.getEffectValue(playerIndex, TRIPLESHOT);
+        Integer TRIPLE_SHOT_OFFSET = gameState.getEffectValue(playerIndex, ItemEffectType.TRIPLESHOT);
 
         addBullet(bullets, centerX, bulletY);
         addBullet(bullets, centerX - TRIPLE_SHOT_OFFSET, bulletY);

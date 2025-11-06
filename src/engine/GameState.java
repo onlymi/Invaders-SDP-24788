@@ -3,7 +3,10 @@ package engine;
 
 import java.util.HashMap;
 import java.util.Map;
-import engine.ItemEffect.ItemEffectType;
+
+import engine.gameplay.item.ItemEffect;
+import engine.gameplay.item.ItemEffect.ItemEffectType;
+import engine.utils.Cooldown;
 
 /**
  * Implements an object that stores the state of the game between levels -

@@ -1,7 +1,8 @@
 package screen;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
-import engine.Cooldown;
+import engine.utils.Cooldown;
 import engine.Core;
 
 /**
@@ -11,19 +12,21 @@ import engine.Core;
  */
 
 public class PlayModeSelectionScreen extends Screen {
+
     private boolean coopSelected = false;
     public boolean isCoopSelected() { return coopSelected; }
     private static final int SELECTION_TIME = 200;
     private Cooldown selectionCooldown;
     private int menuIndex = 0; // 0 = 1P, 1 = 2P, 2 = Back
 
-/**
- * Constructor, establishes the properties of the screen.
- *
- * @param width  Screen width.
- * @param height Screen height.
- * @param fps    Frames per second, frame rate at which the game is run.
- *  **/
+    /**
+     * Constructor, establishes the properties of the screen.
+     *
+     * @param width  Screen width.
+     * @param height Screen height.
+     * @param fps    Frames per second, frame rate at which the game is run.
+     *
+     *  **/
 
     public PlayModeSelectionScreen(final int width, final int height, final int fps) {
         super(width, height, fps);
@@ -74,9 +77,9 @@ public class PlayModeSelectionScreen extends Screen {
                 int mx = inputManager.getMouseX();
                 int my = inputManager.getMouseY();
 
-                java.awt.Rectangle backBox = drawManager.getBackButtonHitbox(this);
-                java.awt.Rectangle[] modeBoxes = drawManager.getPlayMenuHitboxes(this);
-                java.awt.Rectangle[] allBoxes = {
+                Rectangle backBox = Core.getHitboxManager().getBackButtonHitbox(drawManager.getBackBufferGraphics(), this);
+                Rectangle[] modeBoxes = Core.getHitboxManager().getPlayModeSelectionMenuHitboxes(drawManager.getBackBufferGraphics(), this);
+                Rectangle[] allBoxes = {
                         modeBoxes[0], // 1P
                         modeBoxes[1],  // 2P
                         backBox      // Back
@@ -106,9 +109,9 @@ public class PlayModeSelectionScreen extends Screen {
         int mx = inputManager.getMouseX();
         int my = inputManager.getMouseY();
 
-        java.awt.Rectangle[] modeBoxes = drawManager.getPlayMenuHitboxes(this);
-        java.awt.Rectangle backBox = drawManager.getBackButtonHitbox(this);
-        java.awt.Rectangle[] allBoxes = {
+        Rectangle backBox = Core.getHitboxManager().getBackButtonHitbox(drawManager.getBackBufferGraphics(), this);
+        Rectangle[] modeBoxes = Core.getHitboxManager().getPlayModeSelectionMenuHitboxes(drawManager.getBackBufferGraphics(), this);
+        Rectangle[] allBoxes = {
                 modeBoxes[0], // 1P
                 modeBoxes[1], // 2P
                 backBox       // Back
@@ -121,8 +124,8 @@ public class PlayModeSelectionScreen extends Screen {
             }
         }
 
-        drawManager.drawPlayMenu(this, this.menuIndex==2 ? -1 : this.menuIndex, this.menuIndex);
-        drawManager.drawBackButton(this, this.menuIndex==2);
+        drawManager.getPlayModeSelectionScreenRenderer().drawPlayModeSelectionMenu(drawManager.getBackBufferGraphics(), this, this.menuIndex == 2 ? -1 : this.menuIndex, this.menuIndex);
+        drawManager.getCommonRenderer().drawBackButton(drawManager.getBackBufferGraphics(), this, this.menuIndex == 2);
         drawManager.completeDrawing(this);
     }
 

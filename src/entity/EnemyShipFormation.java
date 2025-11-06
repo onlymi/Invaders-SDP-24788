@@ -8,8 +8,9 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import engine.*;
+import engine.utils.Cooldown;
 import screen.Screen;
-import engine.DrawManager.SpriteType;
+import engine.AssetManager.SpriteType;
 
 /**
  * Groups enemy ships into a formation that moves together.
@@ -116,8 +117,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
         this.movementInterval = 0;
         this.nShipsWide = gameSettings.getFormationWidth();
         this.nShipsHigh = gameSettings.getFormationHeight();
-        this.shootingInterval = gameSettings.getShootingFrecuency();
-        this.shootingVariance = (int) (gameSettings.getShootingFrecuency()
+        this.shootingInterval = gameSettings.getShootingFrequency();
+        this.shootingVariance = (int) (gameSettings.getShootingFrequency()
                 * SHOOTING_VARIANCE);
         this.baseSpeed = gameSettings.getBaseSpeed();
         this.movementSpeed = this.baseSpeed;
@@ -204,7 +205,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
     public final void draw() {
         for (List<EnemyShip> column : this.enemyShips)
             for (EnemyShip enemyShip : column)
-                drawManager.drawEntity(enemyShip, enemyShip.getPositionX(),
+                drawManager.getEntityRenderer().drawEntity(drawManager.getBackBufferGraphics(), enemyShip, enemyShip.getPositionX(),
                         enemyShip.getPositionY());
     }
 

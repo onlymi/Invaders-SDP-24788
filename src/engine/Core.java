@@ -8,6 +8,10 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import engine.gameplay.achievement.AchievementManager;
+import engine.hitbox.HitboxManager;
+import engine.utils.Cooldown;
+import engine.utils.MinimalFormatter;
 import screen.*;
 import entity.Ship;
 
@@ -26,7 +30,7 @@ public final class Core {
 
     /** Lives per player (used to compute team pool in shared mode). */
     private static final int MAX_LIVES = 3;
-    private static final int EXTRA_LIFE_FRECUENCY = 3;
+    private static final int EXTRA_LIFE_FREQUENCY = 3;
 
     /** Frame to draw the screen on. */
     private static Frame frame;
@@ -69,12 +73,12 @@ public final class Core {
 
         // 2P mode: modified to null to allow for switch between 2 modes
         GameState gameState = null;
-        boolean coopSelected = false; // false = 1P, true = 2P
+        boolean coopSelected = false; // false = 1-player mode, true = 2-player mode
 
         int returnCode = 1;
 
-        Ship.ShipType shipTypeP1 = Ship.ShipType.NORMAL; // P1 Ship Type
-        Ship.ShipType shipTypeP2 = Ship.ShipType.NORMAL; // P2 Ship Type
+        Ship.ShipType shipTypeP1 = Ship.ShipType.NORMAL; // Player 1 Ship Type
+        Ship.ShipType shipTypeP2 = Ship.ShipType.NORMAL; // Player 2 Ship Type
         SystemData systemData;
         do {
             // Game Start
@@ -85,7 +89,6 @@ public final class Core {
                     returnCode = systemData.returnCode;
                     coopSelected = systemData.coopSelected;
                     break;
-
                 case 2:
                     // In game screen
                     systemData = gamePlaySystem(width, height, coopSelected, shipTypeP1, shipTypeP2);
@@ -95,19 +98,16 @@ public final class Core {
                     returnCode = systemData.returnCode;
                     LOGGER.info("Closing game screen.");
                     break;
-
                 case 3:
                     // Achievement screen
                     returnCode = achievementSystem(width, height);
                     LOGGER.info("Closing achievement screen.");
                     break;
-
                 case 4:
                     // Setting screen
                     returnCode = settingSystem(width, height);
                     LOGGER.info("Closing setting screen.");
                     break;
-
                 case 5:
                     // Play mode selection screen about 1 player mode or 2 player mode
                     systemData = playModeSelectionSystem(width, height);
@@ -115,7 +115,6 @@ public final class Core {
                     coopSelected = systemData.coopSelected;
                     LOGGER.info("Closing play screen.");
                     break;
-
                 case 6:
                     // Ship selection for Player 1
                     systemData = shipSelectionSystem(width, height, 1, coopSelected);
@@ -123,7 +122,6 @@ public final class Core {
                     returnCode = systemData.returnCode;
                     LOGGER.info("Closing first player ship selection screen.");
                     break;
-
                 case 7:
                     // Ship selection for Player 2
                     systemData = shipSelectionSystem(width, height, 2, coopSelected);
@@ -131,13 +129,11 @@ public final class Core {
                     returnCode = systemData.returnCode;
                     LOGGER.info("Closing second player ship selection screen.");
                     break;
-
                 case 8:
                     // High score screen
                     returnCode = highScoreSystem(width, height);
                     LOGGER.info("Closing high score screen.");
                     break;
-
                 default:
                     break;
             }
@@ -166,7 +162,7 @@ public final class Core {
     }
 
     /**
-     * Controls access to the drawing manager.
+     * Controls access to the draw manager.
      *
      * @return Application draw manager.
      */
@@ -193,6 +189,42 @@ public final class Core {
     }
 
     /**
+     * Controls access to the sound manager.
+     *
+     * @return Application sound manager.
+     */
+    public static SoundManager getSoundManager() {
+        return SoundManager.getInstance();
+    }
+
+    /**
+     * Controls access to the asset manager.
+     *
+     * @return Application asset manager.
+     */
+    public static AssetManager getAssetManager() {
+        return AssetManager.getInstance();
+    }
+
+    /**
+     * Controls access to the achievement manager.
+     *
+     * @return Application achievement manager.
+     */
+    public static AchievementManager getAchievementManager() {
+        return AchievementManager.getInstance();
+    }
+
+    /**
+     * Controls access to the hitboxManager manager.
+     *
+     * @return Application hitboxManager manager.
+     */
+    public static HitboxManager getHitboxManager() {
+        return HitboxManager.getInstance();
+    }
+
+    /**
      * Controls creation of new cooldowns.
      *
      * @param milliseconds
@@ -201,16 +233,6 @@ public final class Core {
      */
     public static Cooldown getCooldown(final int milliseconds) {
         return new Cooldown(milliseconds);
-    }
-
-    /**
-     * Controls access to the achievement manager.
-     *
-     * @return Application achievement manager.
-     * [2025-10-09] Added in commit: feat: complete drawAchievementMenu method in DrawManager
-     */
-    public static AchievementManager getAchievementManager() {
-        return AchievementManager.getInstance();
     }
 
     /**
@@ -313,13 +335,11 @@ public final class Core {
 
         do {
             int teamCap = gameState.isCoop() ? (MAX_LIVES * GameState.NUM_PLAYERS) : MAX_LIVES;
-            boolean bonusLife = gameState.getLevel() % EXTRA_LIFE_FRECUENCY == 0
+            boolean bonusLife = gameState.getLevel() % EXTRA_LIFE_FREQUENCY == 0
                     && gameState.getLivesRemaining() < teamCap;
 
-            currentScreen = new GameScreen(
-                    gameState,
-                    gameSettings.get(gameState.getLevel() - 1),
-                    bonusLife, width, height, FPS, shipTypeP1, shipTypeP2, achievementManager);
+            currentScreen = new GameScreen(gameState, gameSettings.get(gameState.getLevel() - 1), bonusLife, width, height, FPS,
+                    shipTypeP1, shipTypeP2, achievementManager);
 
             LOGGER.info("Starting " + WIDTH + "x" + HEIGHT + " game screen at " + FPS + " fps.");
             systemData.returnCode = frame.setScreen(currentScreen);
@@ -448,7 +468,7 @@ public final class Core {
      * Activate high score screen system.
      *
      * @param width
-     *                     Hgh score screen contents box width
+     *                     High score screen contents box width
      * @param height
      *                     High score screen contents box height
      * @return Next return code

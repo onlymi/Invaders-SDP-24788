@@ -1,4 +1,7 @@
-package engine;
+package engine.gameplay.item;
+
+import engine.Core;
+import engine.GameState;
 
 import java.util.logging.Logger;
 

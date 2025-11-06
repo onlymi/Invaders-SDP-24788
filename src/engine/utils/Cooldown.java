@@ -1,4 +1,4 @@
-package engine;
+package engine.utils;
 
 /**
  * Imposes a cooldown period between two actions.
@@ -24,7 +24,7 @@ public class Cooldown {
 	 * @param milliseconds
 	 *            Time until cooldown period is finished.
 	 */
-	protected Cooldown(final int milliseconds) {
+    public Cooldown(final int milliseconds) {
 		this.milliseconds = milliseconds;
 		this.variance = 0;
 		this.duration = milliseconds;
@@ -40,7 +40,7 @@ public class Cooldown {
 	 * @param variance
 	 *            Variance in the cooldown period.
 	 */
-	protected Cooldown(final int milliseconds, final int variance) {
+    public Cooldown(final int milliseconds, final int variance) {
 		this.milliseconds = milliseconds;
 		this.variance = variance;
 		this.time = 0;

@@ -1,6 +1,6 @@
 package entity;
 
-import engine.ItemData;
+import engine.gameplay.item.ItemData;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -1,4 +1,6 @@
-package engine;
+package engine.gameplay.item;
+
+import engine.Core;
 
 import java.io.*;
 import java.util.*;

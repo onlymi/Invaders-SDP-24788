@@ -4,12 +4,12 @@ import java.awt.Color;
 import java.util.logging.Logger;
 
 import engine.Core;
-import engine.DrawManager.SpriteType;
+import engine.AssetManager.SpriteType;
 
 import engine.GameState;
-import engine.ItemDB;
-import engine.ItemData;
-import engine.ItemEffect;
+import engine.gameplay.item.ItemDB;
+import engine.gameplay.item.ItemData;
+import engine.gameplay.item.ItemEffect;
 
 /**
  * Implements Item that moves vertically down.

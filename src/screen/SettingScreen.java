@@ -1,8 +1,10 @@
 package screen;
 
-import engine.Cooldown;
+import engine.utils.Cooldown;
 import engine.Core;
 import engine.SoundManager;
+
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class SettingScreen extends Screen {
@@ -39,7 +41,7 @@ public class SettingScreen extends Screen {
         this.player2Keys = Core.getInputManager().getPlayer2Keys();
         
         // Start menu music loop when the settings screen is created
-        SoundManager.playLoop("sound/menu_sound.wav");
+        SoundManager.playLoop("title_sound");
     }
 
     private void setVolumeFromX(java.awt.Rectangle barBox, int mouseX) {
@@ -66,7 +68,7 @@ public class SettingScreen extends Screen {
     public final int run(){
         super.run();
         // Stop menu music when leaving the settings screen
-        SoundManager.stop();
+        SoundManager.stopAllMusic();
 
         return this.returnCode;
     }
@@ -88,18 +90,18 @@ public class SettingScreen extends Screen {
             this.inputCooldown.reset();
         }
 
-        if(inputManager.isKeyDown(KeyEvent.VK_DOWN)&&this.inputCooldown.checkFinished() && this.selectedSection == 0) {
-            if(this.selectMenuItem == back){
+        if (inputManager.isKeyDown(KeyEvent.VK_DOWN) && this.inputCooldown.checkFinished() && this.selectedSection == 0) {
+            if (this.selectMenuItem == back){
                 this.selectMenuItem = 0;
-            }else if (this.selectMenuItem == menuItem.length - 1) {
+            } else if (this.selectMenuItem == this.menuItem.length - 1) {
                 this.selectMenuItem = back;
-            }else {
+            } else {
                 this.selectMenuItem ++;
             }
             this.inputCooldown.reset();
         }
 
-        if(this.selectMenuItem == volumeMenu) {
+        if (this.selectMenuItem == volumeMenu) {
              if(this.inputCooldown.checkFinished()) {
                  if (inputManager.isKeyDown(KeyEvent.VK_LEFT) && volumelevel > 0) {
                      this.volumelevel--;
@@ -115,46 +117,36 @@ public class SettingScreen extends Screen {
                  }
              }
         }
-        /**
-         * Change key settings
-         */
-         else if (this.selectMenuItem == firstplayerMenu || this.selectMenuItem == secondplayerMenu) {
-             if (inputManager.isKeyDown(KeyEvent.VK_RIGHT) && this.inputCooldown.checkFinished() && waitingForNewKey == false && selectedSection == 0) {
-                 this.selectedSection= 1;
-                 this.selectedKeyIndex = 0;
-                 this.inputCooldown.reset();
-             }
-             if (this.selectedSection == 1 && inputManager.isKeyDown(KeyEvent.VK_LEFT) && this.inputCooldown.checkFinished() && waitingForNewKey == false) {
-                 selectedSection = 0;
-                 this.inputCooldown.reset();
-             }
-             if (this.selectedSection == 1 && inputManager.isKeyDown(KeyEvent.VK_UP) && this.inputCooldown.checkFinished() && selectedKeyIndex > 0 && waitingForNewKey == false) {
-                 selectedKeyIndex--;
-                 this.inputCooldown.reset();
-             }
-             if (this.selectedSection == 1 && inputManager.isKeyDown(KeyEvent.VK_DOWN) && this.inputCooldown.checkFinished() && selectedKeyIndex < keyItems.length - 1 && waitingForNewKey == false) {
-                 selectedKeyIndex++;
-                 this.inputCooldown.reset();
-             }
-             // Start waiting for new keystrokes
-            if (this.selectedSection == 1 && inputManager.isKeyDown(KeyEvent.VK_SPACE) && this.inputCooldown.checkFinished() && waitingForNewKey == false) {
-                keySelected[selectedKeyIndex] = !keySelected[selectedKeyIndex];
-
-                if (keySelected[selectedKeyIndex]) {
-                    waitingForNewKey = true;
-                } else {
-                    waitingForNewKey = false;
-                }
-
+        // Change key settings
+        else if (this.selectMenuItem == firstplayerMenu || this.selectMenuItem == secondplayerMenu) {
+            if (inputManager.isKeyDown(KeyEvent.VK_RIGHT) && this.inputCooldown.checkFinished() && !waitingForNewKey && selectedSection == 0) {
+                this.selectedSection= 1;
+                this.selectedKeyIndex = 0;
                 this.inputCooldown.reset();
             }
-            /**
-             * check duplicate and exception when new key is pressed, and save as new key if valid
-             */
+            if (this.selectedSection == 1 && inputManager.isKeyDown(KeyEvent.VK_LEFT) && this.inputCooldown.checkFinished() && !waitingForNewKey) {
+                selectedSection = 0;
+                this.inputCooldown.reset();
+            }
+            if (this.selectedSection == 1 && inputManager.isKeyDown(KeyEvent.VK_UP) && this.inputCooldown.checkFinished() && selectedKeyIndex > 0 && !waitingForNewKey) {
+                selectedKeyIndex--;
+                this.inputCooldown.reset();
+            }
+            if (this.selectedSection == 1 && inputManager.isKeyDown(KeyEvent.VK_DOWN) && this.inputCooldown.checkFinished() && selectedKeyIndex < keyItems.length - 1 && !waitingForNewKey) {
+                selectedKeyIndex++;
+                this.inputCooldown.reset();
+            }
+            // Start waiting for new keystrokes
+            if (this.selectedSection == 1 && inputManager.isKeyDown(KeyEvent.VK_SPACE) && this.inputCooldown.checkFinished() && !waitingForNewKey) {
+                keySelected[selectedKeyIndex] = !keySelected[selectedKeyIndex];
+                waitingForNewKey = keySelected[selectedKeyIndex];
+                this.inputCooldown.reset();
+            }
+            // check duplicate and exception when new key is pressed, and save as new key if valid
             if (waitingForNewKey) {
                 int newKey = inputManager.getLastPressedKey();
                 if (newKey != -1 && this.inputCooldown.checkFinished()) {
-                    // exception of esc key and backspace key
+                    // exception to esc key and backspace key
                     if (newKey == KeyEvent.VK_ESCAPE || newKey == KeyEvent.VK_BACK_SPACE) {
                         System.out.println("Key setting change cancelled : " + KeyEvent.getKeyText(newKey) + " input");
                         keySelected[selectedKeyIndex] = false;
@@ -163,10 +155,8 @@ public class SettingScreen extends Screen {
                         return;
                     }
                     // Check duplicate keys
-                    int[] targetKeys = (this.selectMenuItem == firstplayerMenu)
-                            ? player1Keys : player2Keys;
-                    int[] otherKeys = (this.selectMenuItem == firstplayerMenu)
-                            ? player2Keys : player1Keys;
+                    int[] targetKeys = (this.selectMenuItem == firstplayerMenu) ? player1Keys : player2Keys;
+                    int[] otherKeys = (this.selectMenuItem == firstplayerMenu) ? player2Keys : player1Keys;
 
                     boolean duplicate = false;
 
@@ -190,7 +180,7 @@ public class SettingScreen extends Screen {
                         this.inputCooldown.reset();
                         return;
                     }
-                    // key assignment entered and save to keyconfig
+                    // key assignment entered and save to config
                     if (this.selectMenuItem == firstplayerMenu) {
                         player1Keys[selectedKeyIndex] = newKey;
                         Core.getInputManager().setPlayer1Keys(player1Keys);
@@ -220,8 +210,8 @@ public class SettingScreen extends Screen {
         boolean pressed = inputManager.isMousePressed();
         boolean clicked = inputManager.isMouseClicked();
 
-        java.awt.Rectangle backBox = drawManager.getBackButtonHitbox(this);
-        java.awt.Rectangle barBox  = drawManager.getVolumeBarHitbox(this);
+        Rectangle backBox = Core.getHitboxManager().getBackButtonHitbox(drawManager.getBackBufferGraphics(), this);
+        Rectangle barBox  = Core.getHitboxManager().getVolumeBarHitbox(this);
 
         if (clicked && backBox.contains(mx, my)) {
             this.returnCode = 1;
@@ -259,29 +249,29 @@ public class SettingScreen extends Screen {
      */
     private void draw() {
         drawManager.initDrawing(this);
-        drawManager.drawSettingMenu(this);
-        drawManager.drawSettingLayout(this, menuItem,this.selectMenuItem);
+        drawManager.getSettingScreenRenderer().drawSettingMenu(drawManager.getBackBufferGraphics(), this);
+        drawManager.getSettingScreenRenderer().drawSettingLayout(drawManager.getBackBufferGraphics(), this, this.menuItem, this.selectMenuItem);
 
         switch(this.selectMenuItem) {
             case volumeMenu:
-                drawManager.drawVolumeBar(this,this.volumelevel, this.draggingVolume);
+                drawManager.getSettingScreenRenderer().drawVolumeBar(drawManager.getBackBufferGraphics(), this, this.volumelevel, this.draggingVolume);
                 break;
             case firstplayerMenu:
-                drawManager.drawKeysettings(this, 1, this.selectedSection, this.selectedKeyIndex, this.keySelected,this.player1Keys);
+                drawManager.getSettingScreenRenderer().drawKeySettings(drawManager.getBackBufferGraphics(), this, 1, this.selectedSection, this.selectedKeyIndex, this.keySelected,this.player1Keys);
                 break;
             case secondplayerMenu:
-                drawManager.drawKeysettings(this, 2,  this.selectedSection, this.selectedKeyIndex, this.keySelected, this.player2Keys);
+                drawManager.getSettingScreenRenderer().drawKeySettings(drawManager.getBackBufferGraphics(), this, 2,  this.selectedSection, this.selectedKeyIndex, this.keySelected, this.player2Keys);
                 break;
         }
 
         // hover highlight
         int mx = inputManager.getMouseX();
         int my = inputManager.getMouseY();
-        java.awt.Rectangle backBox = drawManager.getBackButtonHitbox(this);
+        java.awt.Rectangle backBox = Core.getHitboxManager().getBackButtonHitbox(drawManager.getBackBufferGraphics(), this);
 
         boolean backHover = backBox.contains(mx, my);
         boolean backSelected = (this. selectMenuItem == back);
-        drawManager.drawBackButton(this, backHover || backSelected);
+        drawManager.getCommonRenderer().drawBackButton(drawManager.getBackBufferGraphics(), this, backHover || backSelected);
 
         drawManager.completeDrawing(this);
     }

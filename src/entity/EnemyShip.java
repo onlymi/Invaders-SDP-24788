@@ -2,9 +2,9 @@ package entity;
 
 import java.awt.Color;
 
-import engine.Cooldown;
+import engine.utils.Cooldown;
 import engine.Core;
-import engine.DrawManager.SpriteType;
+import engine.AssetManager.SpriteType;
 import engine.GameSettings;
 
 
@@ -213,7 +213,8 @@ public class EnemyShip extends Entity {
             }
             Color color = this.getColor();
             if(initialHealth != 0) {
-                int alpha = (int)Math.clamp(70 + 150 * (float)health / initialHealth, 0, 255);
+                int rawAlpha = (int)(70 + 150 * (float)health / initialHealth);
+                int alpha = Math.max(0, Math.min(255, rawAlpha));
                 color = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
                 changeColor(color);
             }

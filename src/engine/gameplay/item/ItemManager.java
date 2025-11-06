@@ -1,8 +1,9 @@
-package engine;
+package engine.gameplay.item;
 
 import java.util.Random;
 import java.util.logging.Logger;
 
+import engine.Core;
 import entity.EnemyShip;
 import entity.Item;
 import entity.ItemPool;

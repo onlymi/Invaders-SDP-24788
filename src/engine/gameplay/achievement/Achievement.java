@@ -1,4 +1,4 @@
-package engine;
+package engine.gameplay.achievement;
 
 /**
  * Represents a single achievement with name, description, and unlock state.

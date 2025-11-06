@@ -2,10 +2,11 @@ package screen;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.*;
 
 import engine.*;
+import engine.gameplay.achievement.AchievementManager;
+import engine.utils.Cooldown;
 
 /**
  * Implements the score screen.
@@ -76,7 +77,7 @@ public class ScoreScreen extends Screen {
     public ScoreScreen(final int width, final int height, final int fps,
                        final GameState gameState, final AchievementManager achievementManager) throws IOException {
         super(width, height, fps);
-        this.gameState = gameState; // Added
+        this.gameState = gameState;
 
         this.score = gameState.getScore();
         this.livesRemaining = gameState.getLivesRemaining();
@@ -84,7 +85,7 @@ public class ScoreScreen extends Screen {
         this.name = new StringBuilder();
         this.bulletsShot = gameState.getBulletsShot();
         this.shipsDestroyed = gameState.getShipsDestroyed();
-        this.totalCoins[0] = gameState.getCoins(); // ADD THIS LINE
+        this.totalCoins[0] = gameState.getCoins();
         this.isNewRecord = false;
         this.name = new StringBuilder();
         this.nameCharSelected = 0;
@@ -100,7 +101,7 @@ public class ScoreScreen extends Screen {
                 this.isNewRecord = true;
 
         } catch (IOException e) {
-            logger.warning("Couldn't load high scores!");
+            LOGGER.warning("Couldn't load high scores!");
         }
         // clear last key
         inputManager.clearLastKey();
@@ -127,7 +128,7 @@ public class ScoreScreen extends Screen {
 		if (this.inputDelay.checkFinished()) {
 			if (inputManager.isKeyDown(KeyEvent.VK_ESCAPE)) {
                 // Return to main menu.
-                SoundManager.playOnce("sound/select.wav");
+                SoundManager.playOnce("select");
 				this.returnCode = 1;
 				this.isRunning = false;
 				if (this.isNewRecord) {
@@ -138,7 +139,7 @@ public class ScoreScreen extends Screen {
                 // name too short -> return
                 if (this.name.length() < 3) return;
 				// Play again.
-                SoundManager.playOnce("sound/select.wav");
+                SoundManager.playOnce("select");
 				this.returnCode = 2;
 				this.isRunning = false;
 				if (this.isNewRecord) {
@@ -209,7 +210,7 @@ public class ScoreScreen extends Screen {
         try {
             Core.getFileManager().saveHighScores(highScores, mode);
         } catch (IOException e) {
-            logger.warning("Couldn't load high scores!");
+            LOGGER.warning("Couldn't load high scores!");
         }
     }
 
@@ -222,7 +223,7 @@ public class ScoreScreen extends Screen {
         try {
             this.achievementManager.saveToFile(new String(this.name), this.mode);
         } catch (IOException e) {
-            logger.warning("Couldn't save achievements!");
+            LOGGER.warning("Couldn't save achievements!");
         }
     }
 
@@ -232,7 +233,7 @@ public class ScoreScreen extends Screen {
     private void draw() {
         drawManager.initDrawing(this);
 
-		drawManager.drawGameOver(this, this.inputDelay.checkFinished());
+		drawManager.getScoreScreenRenderer().drawGameOver(drawManager.getBackBufferGraphics(), this, this.inputDelay.checkFinished());
 
         float accuracy = (this.bulletsShot > 0)
                 ? (float) this.shipsDestroyed / this.bulletsShot
@@ -241,12 +242,12 @@ public class ScoreScreen extends Screen {
 		// 2P mode: edit to include co-op + individual score/coins
 		if (this.gameState != null && this.gameState.isCoop()) {
 			// team summary
-			drawManager.drawResults(this,
-					this.gameState.getScore(),
-                    this.gameState.getCoins(),// team score
+			drawManager.getScoreScreenRenderer().drawResults(drawManager.getBackBufferGraphics(), this,
+                    this.gameState.getScore(),
+                    this.gameState.getCoins(),
 					this.gameState.getLivesRemaining(),
 					this.gameState.getShipsDestroyed(),
-					0f,// leaving out team accuracy
+					0f, // Leaving out team accuracy
                     this.isNewRecord,
                     false // Draw accuracy for 2P mode
 			);
@@ -265,19 +266,19 @@ public class ScoreScreen extends Screen {
             } else {
                 y = this.getHeight() / 2 + 80; // Position if new record is False
             }
-            drawManager.drawCenteredRegularString(this, p1, y);
-            drawManager.drawCenteredRegularString(this, p2, y + 20); // Increase spacing
+            drawManager.getCommonRenderer().drawCenteredRegularString(drawManager.getBackBufferGraphics(), this, p1, y);
+            drawManager.getCommonRenderer().drawCenteredRegularString(drawManager.getBackBufferGraphics(), this, p2, y + 20); // Increase spacing
 
 		} else {
 			// 1P legacy summary with accuracy
 			float acc = (this.bulletsShot > 0) ? (float) this.shipsDestroyed / this.bulletsShot : 0f;
-            drawManager.drawResults(this, this.score, this.coins, this.livesRemaining, this.shipsDestroyed, acc, this.isNewRecord, true); // Draw accuracy for 1P mode
+            drawManager.getScoreScreenRenderer().drawResults(drawManager.getBackBufferGraphics(), this, this.score, this.coins, this.livesRemaining, this.shipsDestroyed, acc, this.isNewRecord, true); // Draw accuracy for 1P mode
 		}
 
 
-		drawManager.drawNameInput(this, this.name, this.isNewRecord);
+		drawManager.getScoreScreenRenderer().drawNameInput(drawManager.getBackBufferGraphics(), this, this.name, this.isNewRecord);
 		if (showNameError)
-			drawManager.drawNameInputError(this);
+			drawManager.getScoreScreenRenderer().drawNameInputError(drawManager.getBackBufferGraphics(), this);
 
         drawManager.completeDrawing(this);
     }

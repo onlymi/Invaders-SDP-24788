@@ -24,7 +24,7 @@ public class GameSettings {
 	/** Speed of the enemies, function of the remaining number. */
 	private int baseSpeed;
 	/** Frequency of enemy shootings, +/- 30%. */
-	private int shootingFrecuency;
+	private int shootingFrequency;
 
 	//추가 사항
 	public static class ChangeData {
@@ -169,15 +169,15 @@ public class GameSettings {
 	 *                          Height of the level's enemy formation.
 	 * @param baseSpeed
 	 *                          Speed of the enemies.
-	 * @param shootingFrecuency
-	 *                          Frecuency of enemy shootings, +/- 30%.
+	 * @param shootingFrequency
+	 *                          Frequency of enemy shootings, +/- 30%.
 	 */
 	public GameSettings(final int formationWidth, final int formationHeight,
-						final int baseSpeed, final int shootingFrecuency) {
+						final int baseSpeed, final int shootingFrequency) {
 		this.formationWidth = formationWidth;
 		this.formationHeight = formationHeight;
 		this.baseSpeed = baseSpeed;
-		this.shootingFrecuency = shootingFrecuency;
+		this.shootingFrequency = shootingFrequency;
 		this.changeDataList = new ArrayList<>();
 	}
 
@@ -203,10 +203,10 @@ public class GameSettings {
 	}
 
 	/**
-	 * @return the shootingFrecuency
+	 * @return the shootingFrequency
 	 */
-	public final int getShootingFrecuency() {
-		return shootingFrecuency;
+	public final int getShootingFrequency() {
+		return shootingFrequency;
 	}
 
 }

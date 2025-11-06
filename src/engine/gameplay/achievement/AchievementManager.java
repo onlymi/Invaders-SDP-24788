@@ -1,6 +1,9 @@
-package engine;
+package engine.gameplay.achievement;
 
-import screen.GameScreen;
+import engine.utils.Cooldown;
+import engine.Core;
+import engine.FileManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +130,7 @@ public class AchievementManager {
      * Returns the shared instance of AchievementManager.
      * [2025-10-17] Added in commit feat: complete drawAchievementMenu method in DrawManager.
      */
-    protected static AchievementManager getInstance() {
+    public static AchievementManager getInstance() {
         if (instance == null)
             instance = new AchievementManager();
         return instance;
