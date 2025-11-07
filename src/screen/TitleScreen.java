@@ -1,5 +1,6 @@
 package screen;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import engine.utils.Cooldown;
@@ -120,7 +121,7 @@ public class TitleScreen extends Screen {
                 int temp_x = inputManager.getMouseX();
                 int temp_y = inputManager.getMouseY();
 
-                java.awt.Rectangle[] boxes = Core.getHitboxManager().getMenuHitboxes(drawManager.getBackBufferGraphics(), this);
+                Rectangle[] boxes = Core.getHitboxManager().getMenuHitboxes(drawManager.getBackBufferGraphics(), this);
                 int[] pos = {5, 3, 8, 4, 0};
 
                 for (int i = 0; i < boxes.length; i++) {
